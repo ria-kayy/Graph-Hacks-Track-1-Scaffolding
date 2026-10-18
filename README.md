@@ -100,7 +100,9 @@ The React UI shows repository status, function history, triage, directed graph e
 
 ## Three-minute demo
 
-1. In **Function history**, query `click._termui_impl.ProgressBar.generator`. Show the actual rationale extracted from PR #706 and its issue #651 → PR → commit → symbol evidence. Git file relocation is a separate identity-continuity step, not a fabricated commit edge to a future location.
+For submission recording, use [the narrated Track 01 walkthrough](docs/FINAL_DEMO.md). Investigate distinguishes automatic retrieval from model-selected calls in its **Model execution** record, including arguments, returned data, failures, and stop reasons. Without model credentials, it explicitly reports that no model-selected calls ran. The graph defaults to a focused evidence path; **All returned evidence** expands this query's returned subgraph. Select a node to highlight its connections and inspect its source.
+
+1. In **Function history**, query `click._termui_impl.ProgressBar.generator`. Show issue #651 → PR #706 → commit → symbol evidence. Show a rationale quote only if the current result includes a verified claim; the live graph may report none for this function. Git file relocation is a separate identity-continuity step, not a fabricated commit edge to a future location.
 2. Open **Evaluation**. Report the measured values below and the vector/graph tie.
 3. In **Issue triage**, preview “Progress bar does not update after each item is processed.” Follow the graph-selected functions, ranking components, reverse callers, verified rationale and reviewer evidence.
 4. For the external action, configure a valid token and your fork, create an issue there, preview its number, then explicitly press **Post triage comment to my fork**. No GitHub comment was posted during development.

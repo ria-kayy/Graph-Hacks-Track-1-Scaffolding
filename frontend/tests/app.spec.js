@@ -192,11 +192,16 @@ test('graph supports zoom, pan, reset, and opening a source node',async({page})=
   await expect(zoom).toHaveText(initial);
   const fraction=Number((await zoom.textContent()).match(/\d+/)[0])/100;
   // Fixture nodes are at x=0,200,400,800 and y=0; fit centers their bounding box at x=400.
-  const opened=page.waitForEvent('popup');
   await graph.click({position:{x:box.width/2-400*fraction,y:box.height/2}});
+  const source=page.getByRole('link',{name:'Open selected source ↗'});
+  await expect(source).toHaveAttribute('href',issue.url);
+  const opened=page.waitForEvent('popup');
+  await source.click();
   const popup=await opened;
   await expect(popup).toHaveURL(issue.url);
   await popup.close();
+  await page.getByRole('button',{name:'All returned evidence'}).click();
+  await expect(page.getByRole('button',{name:'Focus evidence path'})).toHaveAttribute('aria-pressed','true');
 });
 
 test('posting sends the reviewed preview ID and displays stale-issue rejection',async({page})=>{
@@ -319,4 +324,43 @@ test('repository refresh sends the configured admin token',async({page})=>{
   });
   await page.getByRole('button',{name:'Refresh repository',exact:true}).click();
   await expect.poll(()=>authorization).toBe('Bearer fixture-admin-secret');
+});
+
+test('investigation separates model-selected calls from retrieval and shows stop reasons',async({page})=>{
+  await bootstrap(page);
+  await openApp(page);
+  await page.route('**/api/chat',route=>route.fulfill({json:{
+    mode:'model_assisted',answer:'Inspect the verified implementation.',findings:[],evidence:[],
+    agent_execution:{status:'completed',steps:[{round:1,tool:'trace_callers',status:'completed',purpose:'Check which function invokes the generator.',arguments:{symbol:'ProgressBar.generator'},result:'{"trace_callers":[{"qualified_name":"ProgressBar.__iter__"}]}',evidence_ids:[],elapsed_ms:12}],stop_reason:'Answer cites verified evidence; investigation complete.'},
+    trace:['Bootstrap retrieval'],
+  }}));
+  await page.getByRole('button',{name:'Investigate',exact:true}).click();
+  await page.getByLabel('Describe what is happening').fill('Why does progress advance early?');
+  await page.getByRole('button',{name:'Investigate →',exact:true}).click();
+  const record=page.getByRole('region',{name:'Model execution record'});
+  await expect(record).toContainText('trace_callers');
+  await expect(record).toContainText('Check which function invokes the generator.');
+  await record.getByText('Arguments and returned evidence').click();
+  await expect(record).toContainText('ProgressBar.__iter__');
+  await expect(record).toContainText('investigation complete');
+  await page.route('**/api/chat',route=>route.fulfill({json:{mode:'retrieval_only',answer:'Verified retrieval results.',findings:[],evidence:[],agent_execution:{status:'not_configured',steps:[],stop_reason:'Configure model credentials and restart.'},trace:[]}}));
+  await page.getByRole('button',{name:'Investigate →',exact:true}).click();
+  await expect(record).toContainText('No model-selected tool calls were executed.');
+  await expect(record).toContainText('not configured');
+  await expect(record).not.toContainText('trace_callers');
+});
+
+test('focused graph stays legible and inspectable in a narrow browser panel',async({page})=>{
+  await page.setViewportSize({width:390,height:1000});
+  await bootstrap(page);
+  await openApp(page);
+  await preview(page);
+  const graph=page.getByRole('img',{name:'Interactive evidence graph connecting issues, pull requests, commits, and functions'});
+  await graph.scrollIntoViewIfNeeded();
+  const zoom=Number((await page.getByRole('status',{name:'Graph zoom'}).textContent()).match(/\d+/)[0])/100;
+  expect(zoom).toBeGreaterThan(.7);
+  const box=await graph.boundingBox();
+  // Narrow layouts put stages vertically at y=0,100,200,400.
+  await graph.click({position:{x:box.width/2,y:box.height/2-200*zoom}});
+  await expect(page.getByRole('link',{name:'Open selected source ↗'})).toHaveAttribute('href',issue.url);
 });

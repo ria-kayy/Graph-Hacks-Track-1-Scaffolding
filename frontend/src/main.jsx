@@ -25,15 +25,15 @@ async function api(path, payload, signal, adminToken='') {
 }
 const short = name => name.split('.').slice(-2).join('.');
 
-function graphElements(result) {
+function graphElements(result, full=false) {
   const nodes = new Map(), edges = new Map(), slots = [0,0,0,0,0];
-  function node(id, label, kind, stage, url) { if (!nodes.has(id)) nodes.set(id, { data:{id,label,kind,url}, position:{x:stage*200,y:slots[stage]++*100} }); }
+  function node(id, label, kind, stage, url) { if (!nodes.has(id)) nodes.set(id, { data:{id,label,kind,url}, position:{x:stage*200,y:slots[stage]++*100} }); else if(url) nodes.get(id).data.url=url; }
   function edge(from,to,label) { if (from === to) return; const id=from+':'+to+':'+label; edges.set(id,{ data:{id,source:from,target:to,label} }); }
   const candidates = result?.localization?.candidates || result?.candidates || [];
-  for (const candidate of candidates.slice(0,3)) {
+  for (const candidate of (full ? candidates : candidates.slice(0,1))) {
     const s=candidate.symbol;
-    node(s.id,short(s.qualified_name),'symbol',4);
-    for (const path of candidate.paths.slice(0,3)) {
+    node(s.id,short(s.qualified_name),'symbol',4,candidate.direct_evidence?.source_url);
+    for (const path of (full ? candidate.paths : candidate.paths.slice(0,1))) {
       node(path.issue.id,'Issue #'+path.issue.number,'issue',0,path.issue.url);
       node(path.pr.id,'PR #'+path.pr.number,'pr',1,path.pr.url);
       node(path.commit.sha,path.commit.sha.slice(0,8),'commit',2,path.commit.url);
@@ -45,7 +45,7 @@ function graphElements(result) {
   if (result?.timeline) {
     const s=result.symbol; node(s.id,short(s.qualified_name),'symbol',3);
     const linked=result.timeline.filter(record=>record.pr);
-    const records=(linked.length ? linked : result.timeline).slice(0,3);
+    const records=full ? result.timeline : (linked.length ? linked : result.timeline).slice(0,1);
     for (const record of records) {
       const c=record.commit, changed=record.modified_symbol || s; node(c.sha,c.sha.slice(0,8),'commit',2,c.url); node(changed.id,short(changed.qualified_name),'symbol',3); edge(c.sha,changed.id,'MODIFIED_SYMBOL');
       if (changed.id !== s.id) edge(changed.id,s.id,'GIT RENAME');
@@ -54,7 +54,7 @@ function graphElements(result) {
     }
   }
   if (result?.evidence?.length) {
-    for (const item of result.evidence.slice(0,6)) {
+    for (const item of (full ? result.evidence : result.evidence.filter(item=>item.symbol).slice(0,1))) {
       const symbol=item.symbol;
       if (!symbol) continue;
       const fileId='file:'+item.file_path;
@@ -63,36 +63,74 @@ function graphElements(result) {
       edge(fileId,symbol.id,'CONTAINS · '+item.start_line+'-'+item.end_line);
     }
   }
+  for (const finding of (full ? result?.findings||[] : (result?.findings||[]).slice(0,1))) {
+    if (!finding.symbol || !finding.structure) continue;
+    const s=finding.symbol;
+    const source=result.evidence?.find(item=>item.symbol_id===s.id);
+    node(s.id,short(s.qualified_name),'symbol',3,source?.source_url);
+    for (const caller of (full?finding.structure.callers:finding.structure.callers.slice(0,1))) {
+      const id='caller:'+caller.qualified_name;
+      node(id,short(caller.qualified_name),'symbol',2);edge(id,s.id,'CALLS');
+    }
+    for (const callee of (full?finding.structure.callees:finding.structure.callees.slice(0,1))) {
+      const id='callee:'+callee.qualified_name;
+      node(id,short(callee.qualified_name),'symbol',4);edge(s.id,id,'CALLS');
+    }
+  }
   return [...nodes.values(), ...edges.values()];
 }
 
 function EvidenceGraph({ result }) {
   const container=useRef(null), graphRef=useRef(null);
   const [zoom,setZoom]=useState(1);
-  const elements=graphElements(result);
+  const [full,setFull]=useState(false), [selected,setSelected]=useState(null);
+  const elements=graphElements(result,full);
+  useEffect(()=>{setFull(false);setSelected(null);},[result]);
   useEffect(()=>{
     if (!elements.length || !container.current) return;
-    const graph=cytoscape({ container:container.current, elements, layout:{name:'preset'}, minZoom:.2,maxZoom:2,
+    const positions=new Map(elements.filter(item=>item.position).map(item=>[item.data.id,{...item.position}]));
+    const positionFor=(item)=>{const original=positions.get(item.id());return container.current.clientWidth<600?{x:original.y*1.8,y:original.x*.5}:{...original};};
+    const graph=cytoscape({ container:container.current, elements, layout:{name:'preset',positions:positionFor}, minZoom:.2,maxZoom:2,
       style:[
         {selector:'node',style:{shape:'round-rectangle',width:144,height:48,'background-color':'#f2e5d7',label:'data(label)',color:'#202a32','font-size':11,'text-valign':'center','text-halign':'center','text-wrap':'ellipsis','text-max-width':132,'border-width':1,'border-color':'#d8c7b5'}},
         {selector:'node[kind="symbol"]',style:{'background-color':'#213d43',color:'#fff','border-color':'#213d43'}},
         {selector:'node[kind="issue"]',style:{'background-color':'#f2d5c6','border-color':'#dba58b'}},
         {selector:'edge',style:{width:1.5,'line-color':'#a3aaa7','target-arrow-color':'#a3aaa7','target-arrow-shape':'triangle','curve-style':'bezier',label:'data(label)','font-size':8,'text-background-color':'#fffefa','text-background-opacity':1,'text-background-padding':3}},
-        {selector:'node[url]',style:{'border-width':2}}
+        {selector:'node[url]',style:{'border-width':2}},
+        {selector:'.dimmed',style:{opacity:.2}},
+        {selector:'edge.highlighted',style:{width:3,'line-color':'#b7693d','target-arrow-color':'#b7693d'}},
+        {selector:'node.highlighted',style:{'border-width':3,'border-color':'#b7693d'}}
       ]});
     graphRef.current=graph;
     graph.on('zoom',()=>setZoom(graph.zoom()));
-    graph.on('tap','node',event=>{const url=event.target.data('url'); if (url) window.open(url,'_blank','noopener,noreferrer');});
-    graph.fit(undefined,35);
-    const observer=new ResizeObserver(()=>{graph.resize();graph.fit(undefined,35);}); observer.observe(container.current);
+    graph.on('tap','node',event=>{
+      const focus=event.target.closedNeighborhood();
+      graph.elements().removeClass('highlighted dimmed');
+      graph.elements().difference(focus).addClass('dimmed');focus.addClass('highlighted');
+      setSelected(event.target.data());
+    });
+    function fitLayout() {
+      graph.resize();
+      graph.nodes().forEach(item=>item.position(positionFor(item)));
+      graph.fit(undefined,25);
+    }
+    fitLayout();
+    const observer=new ResizeObserver(fitLayout); observer.observe(container.current);
     return ()=>{observer.disconnect();graphRef.current=null;graph.destroy();};
-  },[result]);
+  },[result,full]);
   if (!elements.length) return <div className="empty-graph"><svg viewBox="0 0 240 90" aria-hidden="true"><path d="M40 45H120H200"/><circle cx="40" cy="45" r="14"/><circle cx="120" cy="45" r="14"/><circle cx="200" cy="45" r="14"/></svg><h3>Every recommendation has a path.</h3><p>Run a history query or triage an issue to follow its evidence through the graph.</p></div>;
   function zoomBy(factor) {
     const graph=graphRef.current;
     if (graph) graph.zoom({level:Math.min(2,Math.max(.2,graph.zoom()*factor)),renderedPosition:{x:graph.width()/2,y:graph.height()/2}});
   }
-  return <React.Fragment key="active-graph"><div className="graph-controls"><button onClick={()=>zoomBy(1.25)} aria-label="Zoom in">+</button><button onClick={()=>zoomBy(.8)} aria-label="Zoom out">−</button><button onClick={()=>graphRef.current?.fit(undefined,35)}>Reset view</button><span role="status" aria-label="Graph zoom">Zoom: {Math.round(zoom*100)}%</span></div><div key="canvas" ref={container} className="graph" role="img" aria-label="Interactive evidence graph connecting issues, pull requests, commits, and functions"/><p className="graph-hint">Scroll to zoom · drag to explore · select a source node to open GitHub</p></React.Fragment>;
+  return <React.Fragment key="active-graph"><div className="graph-controls"><button onClick={()=>zoomBy(1.25)} aria-label="Zoom in">+</button><button onClick={()=>zoomBy(.8)} aria-label="Zoom out">−</button><button onClick={()=>{graphRef.current?.elements().removeClass('highlighted dimmed');setSelected(null);graphRef.current?.fit(undefined,25);}}>Reset view</button><button aria-pressed={full} onClick={()=>{setFull(value=>!value);setSelected(null);}}>{full?'Focus evidence path':'All returned evidence'}</button><span role="status" aria-label="Graph zoom">Zoom: {Math.round(zoom*100)}%</span></div><div key="canvas" ref={container} className="graph" role="img" aria-label="Interactive evidence graph connecting issues, pull requests, commits, and functions"/>{selected&&<div className="graph-selection" role="status"><b>{selected.label}</b><code>{selected.id}</code>{selected.url?<a href={selected.url} target="_blank" rel="noreferrer">Open selected source ↗</a>:<span>No direct source URL for this node; inspect its linked evidence.</span>}</div>}<p className="graph-hint">{full?'All evidence returned by this query.':'Focused evidence path.'} Scroll to zoom · drag to explore · select a node to inspect its connections.</p></React.Fragment>;
+}
+
+function AgentExecution({ execution }) {
+  if (!execution) return null;
+  return <section className="agent-execution" aria-label="Model execution record"><div className="panel-title"><h2>Model execution</h2><span className="tag">{execution.status.replaceAll('_',' ')}</span></div><p className="execution-note">Automatic retrieval runs first. Calls below are selected by the model using local read-only tools, also exposed through MCP. This record appears when the request finishes.</p>
+    {!execution.steps.length&&<p className="execution-note">No model-selected tool calls were executed.</p>}
+    <ol>{execution.steps.map((step,index)=><li key={index}><div className="execution-heading"><code>{step.tool}</code><span>{step.status} · {step.elapsed_ms} ms · round {step.round}</span></div><p>{step.purpose}</p><details><summary>Arguments and returned evidence</summary><pre>{JSON.stringify(step.arguments,null,2)}</pre><pre>{step.result}</pre>{step.evidence_ids?.length>0&&<p>Evidence IDs: {step.evidence_ids.join(', ')}</p>}</details></li>)}</ol><p className="execution-stop"><b>Stopped:</b> {execution.stop_reason}</p></section>;
 }
 
 function Claim({ claim }) { return <div className="claim"><blockquote>{claim.claim_type === 'derived' ? claim.text : claim.source_span}</blockquote><a href={claim.source_url} target="_blank" rel="noreferrer">{claim.claim_type === 'derived' ? 'Derived interpretation' : 'Verified source span'} ↗</a></div>; }
@@ -237,6 +275,7 @@ function App() {
         {selected?.warnings?.length>0&&<small>{selected.warnings.join(' · ')}</small>}
       </section>
       <nav aria-label="Workflow">{[['history','Function history'],['chat','Investigate'],['triage','Issue triage'],['evaluation','Evaluation']].map(([key,label])=><button key={key} disabled={posting||(key==='triage'&&selectedRepo!=='default')} onClick={()=>change(setMode,key)} className={mode===key?'active':''} aria-current={mode===key?'page':undefined}>{label}</button>)}</nav>
+      {mode==='chat'&&result?.agent_execution&&<AgentExecution execution={result.agent_execution}/>}
       {mode==='evaluation' ? <Evaluation evaluation={evaluation}/> : <div className="workspace">
         <section className="query-panel">
           <div className="panel-title"><h2>{mode==='history'?'Function history':mode==='chat'?'Investigate your repository':'Triage a report'}</h2><span className="step">01 / Query</span></div>
@@ -252,16 +291,19 @@ function App() {
           </fieldset></form>
           {error && <div className="error" role="alert">{error}</div>}
           {mode==='triage'&&result&&<div className="posting"><p>{status?.posting_configured?`Comments are restricted to ${status.fork}.`:'Configure a valid GitHub token and your fork to enable posting.'}</p><button disabled={!status?.posting_configured||!issueNumber||busy||!result.preview_id||!result.findings?.length} onClick={()=>run(true)}>Post triage comment to my fork</button>{result.action?.url&&<a href={result.action.url} target="_blank" rel="noreferrer">Open posted comment ↗</a>}</div>}
+        </section>
+        <section className="evidence-panel"><div className="panel-title"><h2>Graph evidence</h2><span className="step">02 / Trace</span></div><div className="legend"><span><i className="issue-dot"/>Issue</span><span><i className="pr-dot"/>Pull request</span><span><i className="commit-dot"/>Commit</span><span><i className="symbol-dot"/>Function</span></div><EvidenceGraph result={result}/><div className="evidence-footer"><b>Evidence before inference.</b><p>Edges preserve source URLs and timestamps. Quotes must match their source text.</p>{result?.as_of||result?.localization?.as_of?<small>Evidence cutoff: {result.as_of||result.localization.as_of}</small>:<small>Recommendations follow explicit FalkorDB traversals.</small>}</div></section>
+        <section className="results-panel" aria-label="Investigation findings">
           {mode==='chat'&&result&&<div className="findings"><h3>{result.mode==='retrieval_only'?'Retrieval-only investigation':'Model-assisted investigation'}</h3><p>{result.answer}</p>
+            {result.mode==='model_assisted'&&<div className="answer-citations"><h4>Verified answer citations</h4>{result.evidence?.map(item=><details key={item.evidence_id}><summary>{item.evidence_type} · {item.file_path||item.commit_sha?.slice(0,8)||item.evidence_id}</summary><a href={item.source_url} target="_blank" rel="noreferrer">Open verified source ↗</a><pre>{item.excerpt}</pre></details>)}</div>}
             {result.findings?.map((finding,index)=>{const source=result.evidence.find(item=>item.symbol_id===finding.symbol.id);return <article className="candidate" key={finding.symbol.id}><b>{index+1}. <code>{finding.symbol.qualified_name}</code></b><p>{finding.reason}</p>{source&&<><a href={source.source_url} target="_blank" rel="noreferrer">{source.file_path}:{source.start_line}-{source.end_line} · indexed source ↗</a><pre>{source.excerpt}</pre></>}<p>Callers: {finding.structure.callers.map(item=>item.qualified_name).join(', ')||'none statically resolved'}<br/>Calls: {finding.structure.callees.map(item=>item.qualified_name).join(', ')||'none statically resolved'}</p>{finding.history?.timeline?.map(record=><p key={record.commit.sha}><a href={record.commit.url} target="_blank" rel="noreferrer">{record.commit.sha.slice(0,8)}</a> · {record.commit.message.split('\n')[0]}{record.pr&&<> · <a href={record.pr.url} target="_blank" rel="noreferrer">PR #{record.pr.number}</a></>}</p>)}{finding.history?.claims?.map(claim=><Claim key={claim.id} claim={claim}/>)}</article>;})}
             {result.historical_matches?.length>0&&<details><summary>Historical issue matches (background only)</summary>{result.historical_matches.map(match=><p key={match.issue.id}><a href={match.issue.url} target="_blank" rel="noreferrer">{match.issue.title}</a> · similarity {match.similarity.toFixed(2)} · not causal evidence</p>)}</details>}
             {result.commit_matches?.length>0&&<details><summary>Matching commit messages (historical background)</summary>{result.commit_matches.map(commit=><p key={commit.sha}><a href={commit.url} target="_blank" rel="noreferrer">{commit.sha.slice(0,8)}</a> · {commit.message.split('\n')[0]}{commit.verified_paths?.map((path,index)=><span key={index}>{path.pr&&<> · <a href={path.pr.url} target="_blank" rel="noreferrer">PR #{path.pr.number}</a></>}{path.issue&&<> · <a href={path.issue.url} target="_blank" rel="noreferrer">Issue #{path.issue.number}</a></>}</span>)}{commit.modified_symbols?.map((symbol,index)=><small key={index}> · modified {symbol.qualified_name} ({symbol.file_path})</small>)}</p>)}</details>}
           </div>}
           {mode!=='chat'&&<Findings result={result} mode={mode}/>}
         </section>
-        <section className="evidence-panel"><div className="panel-title"><h2>Graph evidence</h2><span className="step">02 / Trace</span></div><div className="legend"><span><i className="issue-dot"/>Issue</span><span><i className="pr-dot"/>Pull request</span><span><i className="commit-dot"/>Commit</span><span><i className="symbol-dot"/>Function</span></div><EvidenceGraph result={result}/><div className="evidence-footer"><b>Evidence before inference.</b><p>Edges preserve source URLs and timestamps. Quotes must match their source text.</p>{result?.as_of||result?.localization?.as_of?<small>Evidence cutoff: {result.as_of||result.localization.as_of}</small>:<small>Recommendations follow explicit FalkorDB traversals.</small>}</div></section>
       </div>}
-      <section className="trace-panel"><div><span className="eyebrow">Agent trace</span><h2>{trace.length?'The path to this answer':'Ready when you are'}</h2></div><ol>{trace.length?trace.map((step,i)=><li key={i}>{step}</li>):<li>Your query will reveal the retrieval, graph traversal and ranking steps here.</li>}</ol></section>
+      <section className="trace-panel"><div><span className="eyebrow">Retrieval workflow</span><h2>{trace.length?'The path to this answer':'Ready when you are'}</h2></div><ol>{trace.length?trace.map((step,i)=><li key={i}>{step}</li>):<li>Your query will reveal the retrieval, graph traversal and ranking steps here.</li>}</ol></section>
     </main><footer><span>WhyGraph · Repository-aware engineering investigations.</span><span>Powered by FalkorDB</span></footer>
   </div>;
 }

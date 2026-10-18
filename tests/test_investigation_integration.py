@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from backend import repositories as registry
-from backend.agent.investigation import investigate, search_code, read_source
+from backend.agent.investigation import investigate, search_code, read_source, search_commits
 from backend.agent.evidence import validate_evidence
 from backend.graph.client import Graph
 from backend.ingestion.code_parser import parse_sources, persist
@@ -65,6 +65,19 @@ def test_source_only_investigation_and_conversation_are_repository_isolated(inde
         investigate(b['repository_id'], 'what calls it?', result['conversation_id'])
     other = investigate(b['repository_id'], 'network retry')
     assert all('fixture/beta' in e['source_url'] for e in other['evidence'])
+
+
+def test_commit_search_handles_unicode_and_upgrades_existing_messages(indexed):
+    record = indexed[0]
+    graph = Graph(record['graph_name'])
+    message = 'Fix Unicode replacement character (\ufffd) in PROGRESS display'
+    graph.nodes('Commit', [{'id': 'unicode-commit', 'message': message,
+                            'timestamp': '2022-01-01T00:00:00Z'}])
+    matches = search_commits(record['repository_id'], 'progress', as_of='2023-01-01T00:00:00Z')
+    assert [item['id'] for item in matches] == ['unicode-commit']
+    assert matches[0]['message'] == message
+    assert not search_commits(record['repository_id'], 'progress', as_of='2021-01-01T00:00:00Z')
+    assert search_commits(record['repository_id'], 'PROGRESS')[0]['message'] == message
 
 
 def test_dirty_checkout_and_forged_citations_cannot_change_verified_source(indexed):

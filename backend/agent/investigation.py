@@ -107,10 +107,16 @@ def search_commits(repo_id: str, query_text: str, as_of: str | None = None, limi
     terms = sorted(_terms(query_text))[:20]
     if not terms:
         return []
-    clauses = " OR ".join(f"toLower(c.message) CONTAINS ${'term'+str(i)}" for i in range(len(terms)))
+    # Normalize in Python: FalkorDB's toLower rejects some valid Unicode,
+    # including the replacement character present in real Git messages.
+    missing = graph.query("MATCH (c:Commit) WHERE c.search_message IS NULL RETURN c.id,c.message")
+    for offset in range(0, len(missing), 200):
+        graph.query("UNWIND $rows AS row MATCH (c:Commit {id:row.id}) SET c.search_message=row.text",
+                    {"rows": [{"id": identity, "text": (message or "").lower()} for identity, message in missing[offset:offset+200]]})
+    clauses = " OR ".join(f"c.search_message CONTAINS ${'term'+str(i)}" for i in range(len(terms)))
     params = {f"term{i}": term for i, term in enumerate(terms)}
     params.update({"at": at, "limit": max(1, min(limit, 20))})
-    relevance = " + ".join(f"CASE WHEN toLower(c.message) CONTAINS $term{i} THEN 1 ELSE 0 END" for i in range(len(terms)))
+    relevance = " + ".join(f"CASE WHEN c.search_message CONTAINS $term{i} THEN 1 ELSE 0 END" for i in range(len(terms)))
     rows = graph.query(f"MATCH (c:Commit) WHERE c.timestamp <= $at AND ({clauses}) WITH c, ({relevance}) AS relevance RETURN c ORDER BY relevance DESC,c.timestamp DESC LIMIT $limit", params)
     return [properties(row[0]) for row in rows]
 
@@ -196,25 +202,30 @@ def investigate(repo_id: str, query_text: str, conversation_id: str | None = Non
         executed_tools += ["get_symbol_context", "history"]
     if rejected:
         trace.append(f"Rejected {len(rejected)} citations that failed source verification")
+    execution = {"status": "not_configured", "transport": "local_function_dispatch", "steps": [],
+                 "stop_reason": "Configure LLM_API_KEY and LLM_MODEL, then restart the backend to enable model-selected tools."}
     try:
         from backend.agent.planner import run
         synthesis = run(repo_id, query_for_retrieval, as_of, evidence, findings)
         if synthesis:
+            execution = synthesis.get("execution", execution)
+            executed_tools += synthesis["tools"]
+            trace += synthesis["trace"]
+        if synthesis and synthesis.get("answer"):
             verified, rejected = validate_evidence(synthesis["evidence"], context(repo_id), found["revision"], as_of)
             if rejected:
                 raise ValueError("Model cited invalid source evidence")
             answer = synthesis["answer"]
             evidence = verified
-            executed_tools += synthesis["tools"]
-            trace += synthesis["trace"]
             mode = "model_assisted"
     except Exception:
+        execution.update(status="failed", stop_reason="Model investigation or citation verification failed; showing verified retrieval results.")
         trace.append("Configured LLM unavailable or returned invalid citations; use retrieval-only fallback")
     if not findings and mode == "retrieval_only":
         answer = "No verified source candidate is available. Add an error message or a more specific description to continue investigating."
     if mode == "retrieval_only":
         trace.append("No validated model synthesis; retrieval-only mode")
-    return {"answer": answer, "mode": mode, "repository_id": repo_id, "revision": found["revision"], "conversation_id": conversation_id, "interpretation": query_text, "uncertainty": "Search candidates are investigation starting points. No runtime failure or root cause has been reproduced.", "suggested_next_step": "Inspect the cited implementation and its callers with the reported input; compare historical changes only when the behavior agrees.", "findings": findings, "evidence": evidence, "historical_matches": historical, "commit_matches": commits, "tools_used": list(dict.fromkeys(executed_tools)) + (["configured_llm"] if mode == "model_assisted" else []), "trace": trace + ["Expand top code candidates to callers, callees, and time-valid function history"]}
+    return {"answer": answer, "mode": mode, "agent_execution": execution, "repository_id": repo_id, "revision": found["revision"], "conversation_id": conversation_id, "interpretation": query_text, "uncertainty": "Search candidates are investigation starting points. No runtime failure or root cause has been reproduced.", "suggested_next_step": "Inspect the cited implementation and its callers with the reported input; compare historical changes only when the behavior agrees.", "findings": findings, "evidence": evidence, "historical_matches": historical, "commit_matches": commits, "tools_used": list(dict.fromkeys(executed_tools)) + (["configured_llm"] if mode == "model_assisted" else []), "trace": trace + ["Expand top code candidates to callers, callees, and time-valid function history"]}
 
 
 def _historical_entity(node, as_of):

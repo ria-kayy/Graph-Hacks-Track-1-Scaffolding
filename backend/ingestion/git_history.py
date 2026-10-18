@@ -46,7 +46,7 @@ def ingest_history(graph, repo, checkout, ref="HEAD", max_commits=None, commit_s
         _, author, email, epoch, message = metadata
         timestamp = iso(epoch)
         url = f"https://github.com/{repo}/commit/{sha}"
-        graph.nodes("Commit", [{"id": sha, "sha": sha, "message": message.strip(), "author": author, "author_email": email, "timestamp": timestamp, "url": url}])
+        graph.nodes("Commit", [{"id": sha, "sha": sha, "message": message.strip(), "search_message": message.strip().lower(), "author": author, "author_email": email, "timestamp": timestamp, "url": url}])
         person = "git:" + email
         graph.nodes("Person", [{"id": person, "name": author, "login": "", "email": email}])
         provenance = {"source_url": url, "source_type": "git_commit", "timestamp": timestamp, "confidence": 1.0}
