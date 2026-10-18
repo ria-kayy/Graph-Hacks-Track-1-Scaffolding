@@ -1,5 +1,8 @@
 # WhyGraph architecture
 
+The following sections document the original benchmark and default tools. The repository-aware extension is described in [INVESTIGATION_REPORT.md](docs/INVESTIGATION_REPORT.md). Registered repositories use isolated graphs and managed Git checkouts; current and historical source retrieval can seed candidates independently of issues. A shared typed read-only toolbox serves HTTP/MCP and the optional bounded model tool loop. Source and historical evidence are validated before responses. Repository/job metadata lives in an atomic local registry, and bounded conversation state is in-process; FalkorDB remains the repository evidence store.
+
+
 ```mermaid
 flowchart TD
     Code[Public Python checkout] --> AST[AST symbols / imports / static calls]
@@ -51,7 +54,7 @@ The preview is a structured recommendation plus Markdown. Numbered-issue preview
 
 The harness separates retrieval from future gold-label reads. It compares BM25 issue retrieval, semantic issue retrieval with direct fix projection, and full graph expansion/ranking. Each case reconstructs a historical source snapshot. It includes cold starts, reports all five requested metrics, and retains predictions and actual symbols for audit.
 
-The measured graph/vector tie is reported without tuning on the test cases. The next useful experiment is a broader historical fix corpus and a held-out set, followed by an ablation of structural expansion. Multi-repository support, automatic fixes/PR generation, implicit-rationale inference and automatic contradiction detection are deliberately absent.
+The measured graph/vector tie is reported without tuning on the test cases. The next useful experiment is a broader historical fix corpus and a held-out set, followed by an ablation of structural expansion. Automatic fixes/PR generation, implicit-rationale inference and automatic contradiction detection are deliberately absent. Multi-repository investigations are supported by the extension described above.
 
 ## Interface and regression checks
 

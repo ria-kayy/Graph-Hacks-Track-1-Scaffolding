@@ -4,7 +4,9 @@
 
 Developers can read what a function does, but its constraints, workarounds and design reasons often live in old issues and PR discussions. WhyGraph connects Python code structure to that history, retrieves evidence through FalkorDB, and uses the resulting paths to decide which functions to inspect and who to suggest as reviewers.
 
-This MVP indexes **one public Python repository: `pallets/click`**. It supports function history, semantic issue retrieval, graph-based localization, reverse-call impact, expertise ranking, source-backed triage previews, and explicit posting to your own verified fork.
+The default demo indexes `pallets/click`; the local app can also register multiple public GitHub repositories, each with its own checkout and FalkorDB graph. Python symbols and calls are parsed with AST. Other repository files are not claimed to have function-level parsing.
+
+See [the repository investigation report](docs/INVESTIGATION_REPORT.md) for the current ingestion/chat workflow, verified results, changed files, and limits. Managed ingestion does not require pre-populating the legacy default graph.
 
 ## Start here
 
@@ -20,8 +22,8 @@ Requirements: Python 3.12+, Node.js 22.12+ or a current supported Node release, 
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/Abhigyan-Shekhar/Graph-Hacks-Brain.git
-cd Graph-Hacks-Brain
+git clone https://github.com/ria-kayy/Graph-Hacks-Track-1-Scaffolding.git
+cd Graph-Hacks-Track-1-Scaffolding
 cp .env.example .env
 ```
 
@@ -68,7 +70,11 @@ The checked-in original issue snapshots let the Click demo reuse verified openin
 
 The selected initial corpus contains the first 28 merged PRs returned by the deterministic closing-keyword search, all reachable default-branch history, and fetched PR refs for commits removed from mainline ancestry by squash/rebase. PR-to-PR closing references and non-Python changes are explicitly distinguished from issue fixes. This is a bounded corpus, not a claim that every GitHub discussion has been ingested.
 
-For a different Python repository, use a fresh `FALKORDB_GRAPH`, set `TARGET_REPO`, and use a matching checkout at `.data/repo`. The MVP rejects mixing repositories in one graph. The checked-in evaluation snapshots and results belong only to Click.
+Search ranks matches across all symbols in the eligible snapshot inside FalkorDB, then transfers only compact candidate metadata. Verified source is read from Git for the final candidates; older snapshots receive a one-time search-field upgrade. Managed ingestion samples 25 recently updated merged fixes across the closing-keyword searches. Refresh bypasses cached GitHub searches and related PR/issue/commit reads. `counts.Symbol` is the current snapshot count; `graph_counts.Symbol` includes retained historical identities.
+
+For read-only public hosting, set `WHYGRAPH_PUBLIC=true` to disable ingestion and posting. To enable administration through a reverse proxy, keep public mode off, configure a strong `WHYGRAPH_ADMIN_TOKEN` on the backend, and enter it under **Admin access** in the UI. Requests send it as a Bearer credential; it stays in tab memory. A configured token is required even on loopback. Without a token, administration is restricted to direct loopback peers with loopback Host/Origin and no forwarding headers. A proxy which rewrites all of these is indistinguishable from a local caller: configure the token or public mode explicitly, and verify your deployment's proxy. Use HTTPS for remote credentials.
+
+The UI can add a public GitHub URL or `owner/repo` and select it for chat. Each repository is stored under `.data/repos/{repository_id}` and indexed in a dedicated graph. The asynchronous job API is `POST /api/repositories`, `GET /api/repositories`, `GET /api/repositories/{repository_id}`, `POST /api/repositories/{repository_id}/refresh`, and `GET /api/ingestion-jobs/{job_id}`. Repository ingestion clones/fetches source without running repository code, caps Python ingestion at 5,000 files / 100 MB and Git history at 500 commits, and reports optional GitHub/embedding failures as warnings. `POST /api/chat` accepts an explicit `repo_id`, query, optional conversation ID, and optional historical cutoff. With no configured model, it clearly returns retrieval-only findings; with `LLM_API_KEY`, `LLM_MODEL`, and optional `LLM_BASE_URL`, bounded synthesis is attempted and accepted only when it cites returned evidence IDs. Historical matches are labelled background, not proof. The checked-in evaluation snapshots and results still belong only to Click.
 
 ### 3. Start the interface
 
@@ -276,7 +282,10 @@ Reproduce with `uv run python -m evaluation.run --repo pallets/click`. The model
 
 ## MCP and tests
 
-The stdio server exports exactly `history`, `localize`, `impact`, `experts`, `similar_issues`, and `triage`:
+Current verification: 92 Python tests including actual FalkorDBLite fixtures, 18 Chromium fixture regressions, production build, and real MCP retrieval calls passed. Earlier counts below describe the original demo verification. For administration keep one local backend process; set `WHYGRAPH_PUBLIC=true` to disable ingestion and posting in public deployments. No LLM key is needed for retrieval-only investigations.
+
+
+The stdio server preserves `history`, `localize`, `impact`, `experts`, `similar_issues`, and `triage`, and adds `search_code`, `search_commits`, `investigate`, `read_source`, `get_symbol_context`, `trace_callers`, and `trace_callees`. Original read tools accept optional `repo_id`; new tools require it:
 
 ```bash
 # Start the MCP server only when configuring a client (it waits on stdin):
@@ -311,7 +320,7 @@ Critical tests cover functions, async methods, imports, statically resolved call
 
 ## Limitations
 
-- Python only, one repository, bounded GitHub history selection.
+- Python AST only, isolated registered repositories, bounded GitHub history selection.
 - AST analysis is approximate; dynamic dispatch, unresolved receivers and many runtime aliases are skipped. Nested definitions with the same qualified name share a logical identity.
 - Symbol IDs include paths. Same-qualified-name continuity across a file move requires a real Git rename edge. Arbitrary renames and multi-step rename chains are imperfect.
 - Git hunks mark enclosing classes and functions; evaluation deliberately scores functions/methods only. Merge commits are diffed against their first parent. Parent/child commits can both appear in timelines.

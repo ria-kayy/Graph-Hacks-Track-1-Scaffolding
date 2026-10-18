@@ -1,0 +1,11 @@
+CREATE INDEX FOR (n:Repository) ON (n.id);
+CREATE INDEX FOR (n:File) ON (n.id);
+CREATE INDEX FOR (n:Symbol) ON (n.id);
+CREATE INDEX FOR (n:Commit) ON (n.id);
+CREATE INDEX FOR (n:PullRequest) ON (n.id);
+CREATE INDEX FOR (n:Issue) ON (n.id);
+CREATE INDEX FOR (n:Person) ON (n.id);
+CREATE INDEX FOR (n:Claim) ON (n.id);
+CREATE INDEX FOR (n:TriagePreview) ON (n.id);
+CREATE VECTOR INDEX FOR (n:Issue) ON (n.embedding) OPTIONS {dimension:384,similarityFunction:'cosine'};
+CREATE VECTOR INDEX FOR (n:Symbol) ON (n.embedding) OPTIONS {dimension:384,similarityFunction:'cosine'};

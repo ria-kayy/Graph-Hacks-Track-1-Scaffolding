@@ -1,0 +1,1479 @@
+{
+  "repo": "pallets/click",
+  "dataset_size": 20,
+  "measured_at": "2026-10-04T09:22:51.207886+00:00",
+  "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "methodology": {
+    "query_text": "Verified GH Archive IssuesEvent opened snapshots (original title and body)",
+    "cutoff": "issue.created_at",
+    "historical_text": "original opening snapshots; edited text excluded unless its availability is before cutoff",
+    "structure": "actual Git source snapshot immediately before cutoff",
+    "history": "PR merge time, commits, and all path edge timestamps <= cutoff",
+    "claims": "created_at <= cutoff; no backdated extraction",
+    "ground_truth": "functions/methods modified by merged fix PR commits",
+    "selection": "first 20 chronological closed issues with merged fix PRs and function changes; no performance-based exclusions",
+    "cold_start": "cases with no available historical fixes remain in denominator",
+    "baselines": "BM25 or MiniLM issue retrieval, then direct historical-fix projection without expansion",
+    "limitations": [
+      "Twenty issues from one repository; most preceding fixes are not in the 25-PR corpus",
+      "Best-effort static Python call resolution",
+      "Symbols added by a future fix cannot be predicted as existing code",
+      "HNSW queries request the full MVP issue corpus before time filtering",
+      "Original opening text omits later valid pre-cutoff comments"
+    ]
+  },
+  "summary": {
+    "keyword": {
+      "top1": 0.2,
+      "top3": 0.25,
+      "top5": 0.3,
+      "mrr": 0.2375,
+      "recall5": 0.11646825396825397
+    },
+    "vector": {
+      "top1": 0.3,
+      "top3": 0.3,
+      "top5": 0.3,
+      "mrr": 0.3,
+      "recall5": 0.12003968253968253
+    },
+    "whygraph": {
+      "top1": 0.3,
+      "top3": 0.3,
+      "top5": 0.3,
+      "mrr": 0.3,
+      "recall5": 0.12003968253968253
+    }
+  },
+  "cases": [
+    {
+      "issue": 323,
+      "as_of": "2015-04-07T23:18:47Z",
+      "snapshot_ref": "0d9731e97c9af9e5b0f5fd8421aeb0184ad42b70",
+      "approach": "keyword",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_completion_script"
+      ],
+      "eligible_historical_issues": 0,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 323,
+      "as_of": "2015-04-07T23:18:47Z",
+      "snapshot_ref": "0d9731e97c9af9e5b0f5fd8421aeb0184ad42b70",
+      "approach": "vector",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_completion_script"
+      ],
+      "eligible_historical_issues": 0,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 323,
+      "as_of": "2015-04-07T23:18:47Z",
+      "snapshot_ref": "0d9731e97c9af9e5b0f5fd8421aeb0184ad42b70",
+      "approach": "whygraph",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_completion_script"
+      ],
+      "eligible_historical_issues": 0,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 409,
+      "as_of": "2015-08-16T21:26:13Z",
+      "snapshot_ref": "bb94c38c3163af211ab1caeb532827baf535da90",
+      "approach": "keyword",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/_termui_impl.py:click._termui_impl._nullpager",
+        "pallets/click:click/_termui_impl.py:click._termui_impl._pipepager",
+        "pallets/click:click/_termui_impl.py:click._termui_impl._tempfilepager",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.pager",
+        "pallets/click:click/termui.py:click.termui.echo_via_pager"
+      ],
+      "eligible_historical_issues": 1,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 409,
+      "as_of": "2015-08-16T21:26:13Z",
+      "snapshot_ref": "bb94c38c3163af211ab1caeb532827baf535da90",
+      "approach": "vector",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/_termui_impl.py:click._termui_impl._nullpager",
+        "pallets/click:click/_termui_impl.py:click._termui_impl._pipepager",
+        "pallets/click:click/_termui_impl.py:click._termui_impl._tempfilepager",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.pager",
+        "pallets/click:click/termui.py:click.termui.echo_via_pager"
+      ],
+      "eligible_historical_issues": 1,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 409,
+      "as_of": "2015-08-16T21:26:13Z",
+      "snapshot_ref": "bb94c38c3163af211ab1caeb532827baf535da90",
+      "approach": "whygraph",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/_termui_impl.py:click._termui_impl._nullpager",
+        "pallets/click:click/_termui_impl.py:click._termui_impl._pipepager",
+        "pallets/click:click/_termui_impl.py:click._termui_impl._tempfilepager",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.pager",
+        "pallets/click:click/termui.py:click.termui.echo_via_pager"
+      ],
+      "eligible_historical_issues": 1,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 474,
+      "as_of": "2015-12-01T21:10:52Z",
+      "snapshot_ref": "607f015ad5b4cdbab87d25a6d99028b078dc88dd",
+      "approach": "keyword",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "eligible_historical_issues": 2,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 474,
+      "as_of": "2015-12-01T21:10:52Z",
+      "snapshot_ref": "607f015ad5b4cdbab87d25a6d99028b078dc88dd",
+      "approach": "vector",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "eligible_historical_issues": 2,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 474,
+      "as_of": "2015-12-01T21:10:52Z",
+      "snapshot_ref": "607f015ad5b4cdbab87d25a6d99028b078dc88dd",
+      "approach": "whygraph",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "eligible_historical_issues": 2,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 495,
+      "as_of": "2015-12-30T22:16:41Z",
+      "snapshot_ref": "5aeff2d5990918a4493c2d02b150e5210f70a5cb",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_winconsole.py:click._winconsole._get_windows_argv"
+      ],
+      "eligible_historical_issues": 4,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 495,
+      "as_of": "2015-12-30T22:16:41Z",
+      "snapshot_ref": "5aeff2d5990918a4493c2d02b150e5210f70a5cb",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_winconsole.py:click._winconsole._get_windows_argv"
+      ],
+      "eligible_historical_issues": 4,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 495,
+      "as_of": "2015-12-30T22:16:41Z",
+      "snapshot_ref": "5aeff2d5990918a4493c2d02b150e5210f70a5cb",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/core.py:click.core.Command.make_parser",
+        "pallets/click:click/exceptions.py:click.exceptions.UsageError.__init__"
+      ],
+      "actual": [
+        "pallets/click:click/_winconsole.py:click._winconsole._get_windows_argv"
+      ],
+      "eligible_historical_issues": 4,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 583,
+      "as_of": "2016-05-14T15:31:40Z",
+      "snapshot_ref": "6f4d267a51a907a7751d6585541863641518c1a0",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_termui_impl.py:click._termui_impl._translate_ch_to_exc",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.getchar"
+      ],
+      "eligible_historical_issues": 5,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 583,
+      "as_of": "2016-05-14T15:31:40Z",
+      "snapshot_ref": "6f4d267a51a907a7751d6585541863641518c1a0",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_termui_impl.py:click._termui_impl._translate_ch_to_exc",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.getchar"
+      ],
+      "eligible_historical_issues": 5,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 583,
+      "as_of": "2016-05-14T15:31:40Z",
+      "snapshot_ref": "6f4d267a51a907a7751d6585541863641518c1a0",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/core.py:click.core.Command.make_parser",
+        "pallets/click:click/exceptions.py:click.exceptions.UsageError.__init__"
+      ],
+      "actual": [
+        "pallets/click:click/_termui_impl.py:click._termui_impl._translate_ch_to_exc",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.getchar"
+      ],
+      "eligible_historical_issues": 5,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 651,
+      "as_of": "2016-09-06T12:09:17Z",
+      "snapshot_ref": "30fc626263db82e9f339ca8810d207ab089d5575",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.__iter__",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.format_eta",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.generator",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.next"
+      ],
+      "eligible_historical_issues": 7,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 651,
+      "as_of": "2016-09-06T12:09:17Z",
+      "snapshot_ref": "30fc626263db82e9f339ca8810d207ab089d5575",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.__iter__",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.format_eta",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.generator",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.next"
+      ],
+      "eligible_historical_issues": 7,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 651,
+      "as_of": "2016-09-06T12:09:17Z",
+      "snapshot_ref": "30fc626263db82e9f339ca8810d207ab089d5575",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/core.py:click.core.Command.make_parser",
+        "pallets/click:click/exceptions.py:click.exceptions.UsageError.__init__"
+      ],
+      "actual": [
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.__iter__",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.format_eta",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.generator",
+        "pallets/click:click/_termui_impl.py:click._termui_impl.ProgressBar.next"
+      ],
+      "eligible_historical_issues": 7,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 674,
+      "as_of": "2016-10-18T21:23:00Z",
+      "snapshot_ref": "d3f36e884e18f374c3e4e6cf062ba19f100d0fd6",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/core.py:click.core.Argument.make_metavar"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 674,
+      "as_of": "2016-10-18T21:23:00Z",
+      "snapshot_ref": "d3f36e884e18f374c3e4e6cf062ba19f100d0fd6",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/core.py:click.core.Argument.make_metavar"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 674,
+      "as_of": "2016-10-18T21:23:00Z",
+      "snapshot_ref": "d3f36e884e18f374c3e4e6cf062ba19f100d0fd6",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/core.py:click.core.Command.make_parser",
+        "pallets/click:click/exceptions.py:click.exceptions.UsageError.__init__"
+      ],
+      "actual": [
+        "pallets/click:click/core.py:click.core.Argument.make_metavar"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 712,
+      "as_of": "2017-01-17T08:07:13Z",
+      "snapshot_ref": "a50befdc3ac475826af75e48fd48b21530851176",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/core.py:click.core.BaseCommand.main",
+        "pallets/click:click/utils.py:click.utils.PacifyFlushWrapper.__getattr__",
+        "pallets/click:click/utils.py:click.utils.PacifyFlushWrapper.__init__",
+        "pallets/click:click/utils.py:click.utils.PacifyFlushWrapper.flush"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 712,
+      "as_of": "2017-01-17T08:07:13Z",
+      "snapshot_ref": "a50befdc3ac475826af75e48fd48b21530851176",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/core.py:click.core.BaseCommand.main",
+        "pallets/click:click/utils.py:click.utils.PacifyFlushWrapper.__getattr__",
+        "pallets/click:click/utils.py:click.utils.PacifyFlushWrapper.__init__",
+        "pallets/click:click/utils.py:click.utils.PacifyFlushWrapper.flush"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 712,
+      "as_of": "2017-01-17T08:07:13Z",
+      "snapshot_ref": "a50befdc3ac475826af75e48fd48b21530851176",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/core.py:click.core.Command.make_parser",
+        "pallets/click:click/exceptions.py:click.exceptions.UsageError.__init__"
+      ],
+      "actual": [
+        "pallets/click:click/core.py:click.core.BaseCommand.main",
+        "pallets/click:click/utils.py:click.utils.PacifyFlushWrapper.__getattr__",
+        "pallets/click:click/utils.py:click.utils.PacifyFlushWrapper.__init__",
+        "pallets/click:click/utils.py:click.utils.PacifyFlushWrapper.flush"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 754,
+      "as_of": "2017-03-26T13:49:05Z",
+      "snapshot_ref": "1d0b39428d6112702ceea1628822b6e9bad1796c",
+      "approach": "keyword",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 754,
+      "as_of": "2017-03-26T13:49:05Z",
+      "snapshot_ref": "1d0b39428d6112702ceea1628822b6e9bad1796c",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 754,
+      "as_of": "2017-03-26T13:49:05Z",
+      "snapshot_ref": "1d0b39428d6112702ceea1628822b6e9bad1796c",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/core.py:click.core.Command.make_parser",
+        "pallets/click:click/exceptions.py:click.exceptions.UsageError.__init__"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 776,
+      "as_of": "2017-05-03T17:01:17Z",
+      "snapshot_ref": "103c1daed9cd16e4f134e20d7d5516f09c9b4251",
+      "approach": "keyword",
+      "predictions": [],
+      "actual": [
+        "pallets/click:click/_compat.py:click._compat.open_stream"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 776,
+      "as_of": "2017-05-03T17:01:17Z",
+      "snapshot_ref": "103c1daed9cd16e4f134e20d7d5516f09c9b4251",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_compat.py:click._compat.open_stream"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 776,
+      "as_of": "2017-05-03T17:01:17Z",
+      "snapshot_ref": "103c1daed9cd16e4f134e20d7d5516f09c9b4251",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/core.py:click.core.Command.make_parser",
+        "pallets/click:click/exceptions.py:click.exceptions.UsageError.__init__"
+      ],
+      "actual": [
+        "pallets/click:click/_compat.py:click._compat.open_stream"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 786,
+      "as_of": "2017-05-15T13:52:31Z",
+      "snapshot_ref": "6f4eb1e4e2bd4a3e8d8df77d20723f7e7a8672ac",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "actual": [
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator.new_func"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 786,
+      "as_of": "2017-05-15T13:52:31Z",
+      "snapshot_ref": "6f4eb1e4e2bd4a3e8d8df77d20723f7e7a8672ac",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "actual": [
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator.new_func"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 786,
+      "as_of": "2017-05-15T13:52:31Z",
+      "snapshot_ref": "6f4eb1e4e2bd4a3e8d8df77d20723f7e7a8672ac",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__"
+      ],
+      "actual": [
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator.new_func"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 790,
+      "as_of": "2017-05-17T01:42:34Z",
+      "snapshot_ref": "6f4eb1e4e2bd4a3e8d8df77d20723f7e7a8672ac",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_option",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_unicodefun.py:click._unicodefun._verify_python3_env",
+        "pallets/click:click/globals.py:click.globals.get_current_context",
+        "pallets/click:click/types.py:click.types.BoolParamType.convert"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.2222222222222222
+    },
+    {
+      "issue": 790,
+      "as_of": "2017-05-17T01:42:34Z",
+      "snapshot_ref": "6f4eb1e4e2bd4a3e8d8df77d20723f7e7a8672ac",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_option",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_unicodefun.py:click._unicodefun._verify_python3_env",
+        "pallets/click:click/globals.py:click.globals.get_current_context",
+        "pallets/click:click/types.py:click.types.BoolParamType.convert"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.2222222222222222
+    },
+    {
+      "issue": 790,
+      "as_of": "2017-05-17T01:42:34Z",
+      "snapshot_ref": "6f4eb1e4e2bd4a3e8d8df77d20723f7e7a8672ac",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_option",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_unicodefun.py:click._unicodefun._verify_python3_env",
+        "pallets/click:click/globals.py:click.globals.get_current_context",
+        "pallets/click:click/types.py:click.types.BoolParamType.convert"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.2222222222222222
+    },
+    {
+      "issue": 825,
+      "as_of": "2017-07-10T07:21:31Z",
+      "snapshot_ref": "950463bd15f877c1163d40b59238b10c637d5b3e",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_compat.py:click._compat._make_cached_stream_func",
+        "pallets/click:click/_compat.py:click._compat._make_cached_stream_func.func",
+        "pallets/click:click/_compat.py:click._compat.get_binary_stderr",
+        "pallets/click:click/_compat.py:click._compat.get_binary_stdout",
+        "pallets/click:click/_compat.py:click._compat.get_text_stderr",
+        "pallets/click:click/_compat.py:click._compat.get_text_stdout",
+        "pallets/click:click/_winconsole.py:click._winconsole.StreamWrapper.__getattr__",
+        "pallets/click:click/_winconsole.py:click._winconsole.StreamWrapper.__init__",
+        "pallets/click:click/_winconsole.py:click._winconsole.StreamWrapper.write",
+        "pallets/click:click/_winconsole.py:click._winconsole._get_text_stderr",
+        "pallets/click:click/_winconsole.py:click._winconsole._get_text_stdout",
+        "pallets/click:click/_winconsole.py:click._winconsole._wrap_std_stream"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 825,
+      "as_of": "2017-07-10T07:21:31Z",
+      "snapshot_ref": "950463bd15f877c1163d40b59238b10c637d5b3e",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "actual": [
+        "pallets/click:click/_compat.py:click._compat._make_cached_stream_func",
+        "pallets/click:click/_compat.py:click._compat._make_cached_stream_func.func",
+        "pallets/click:click/_compat.py:click._compat.get_binary_stderr",
+        "pallets/click:click/_compat.py:click._compat.get_binary_stdout",
+        "pallets/click:click/_compat.py:click._compat.get_text_stderr",
+        "pallets/click:click/_compat.py:click._compat.get_text_stdout",
+        "pallets/click:click/_winconsole.py:click._winconsole.StreamWrapper.__getattr__",
+        "pallets/click:click/_winconsole.py:click._winconsole.StreamWrapper.__init__",
+        "pallets/click:click/_winconsole.py:click._winconsole.StreamWrapper.write",
+        "pallets/click:click/_winconsole.py:click._winconsole._get_text_stderr",
+        "pallets/click:click/_winconsole.py:click._winconsole._get_text_stdout",
+        "pallets/click:click/_winconsole.py:click._winconsole._wrap_std_stream"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 825,
+      "as_of": "2017-07-10T07:21:31Z",
+      "snapshot_ref": "950463bd15f877c1163d40b59238b10c637d5b3e",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.do_complete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument"
+      ],
+      "actual": [
+        "pallets/click:click/_compat.py:click._compat._make_cached_stream_func",
+        "pallets/click:click/_compat.py:click._compat._make_cached_stream_func.func",
+        "pallets/click:click/_compat.py:click._compat.get_binary_stderr",
+        "pallets/click:click/_compat.py:click._compat.get_binary_stdout",
+        "pallets/click:click/_compat.py:click._compat.get_text_stderr",
+        "pallets/click:click/_compat.py:click._compat.get_text_stdout",
+        "pallets/click:click/_winconsole.py:click._winconsole.StreamWrapper.__getattr__",
+        "pallets/click:click/_winconsole.py:click._winconsole.StreamWrapper.__init__",
+        "pallets/click:click/_winconsole.py:click._winconsole.StreamWrapper.write",
+        "pallets/click:click/_winconsole.py:click._winconsole._get_text_stderr",
+        "pallets/click:click/_winconsole.py:click._winconsole._get_text_stdout",
+        "pallets/click:click/_winconsole.py:click._winconsole._wrap_std_stream"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 866,
+      "as_of": "2017-10-10T02:37:28Z",
+      "snapshot_ref": "aae0ae2d87d64ff609279655fdcd02006e07872b",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.do_complete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/core.py:click.core.Command.get_short_help_str",
+        "pallets/click:click/core.py:click.core.MultiCommand.format_commands"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.14285714285714285
+    },
+    {
+      "issue": 866,
+      "as_of": "2017-10-10T02:37:28Z",
+      "snapshot_ref": "aae0ae2d87d64ff609279655fdcd02006e07872b",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.do_complete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/core.py:click.core.Command.get_short_help_str",
+        "pallets/click:click/core.py:click.core.MultiCommand.format_commands"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.14285714285714285
+    },
+    {
+      "issue": 866,
+      "as_of": "2017-10-10T02:37:28Z",
+      "snapshot_ref": "aae0ae2d87d64ff609279655fdcd02006e07872b",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/parser.py:click.parser.OptionParser._match_long_opt",
+        "pallets/click:click/parser.py:click.parser._error_opt_args",
+        "pallets/click:click/exceptions.py:click.exceptions.BadOptionUsage.__init__"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.do_complete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/core.py:click.core.Command.get_short_help_str",
+        "pallets/click:click/core.py:click.core.MultiCommand.format_commands"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.14285714285714285
+    },
+    {
+      "issue": 919,
+      "as_of": "2018-01-26T10:27:14Z",
+      "snapshot_ref": "1e0e9b6210dd33010679ccff5362a791a5f7242a",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/core.py:click.core.BaseCommand.main",
+        "pallets/click:click/core.py:click.core.Command.__init__",
+        "pallets/click:click/core.py:click.core.Context.__init__",
+        "pallets/click:click/core.py:click.core.Context.exit",
+        "pallets/click:click/core.py:click.core.MultiCommand.resolve_command",
+        "pallets/click:click/core.py:click.core.Parameter.full_process_value",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator.new_func",
+        "pallets/click:click/exceptions.py:click.exceptions.Exit.__init__",
+        "pallets/click:click/testing.py:click.testing.Result.__init__"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.14285714285714285
+    },
+    {
+      "issue": 919,
+      "as_of": "2018-01-26T10:27:14Z",
+      "snapshot_ref": "1e0e9b6210dd33010679ccff5362a791a5f7242a",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/core.py:click.core.BaseCommand.main",
+        "pallets/click:click/core.py:click.core.Command.__init__",
+        "pallets/click:click/core.py:click.core.Context.__init__",
+        "pallets/click:click/core.py:click.core.Context.exit",
+        "pallets/click:click/core.py:click.core.MultiCommand.resolve_command",
+        "pallets/click:click/core.py:click.core.Parameter.full_process_value",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator.new_func",
+        "pallets/click:click/exceptions.py:click.exceptions.Exit.__init__",
+        "pallets/click:click/testing.py:click.testing.Result.__init__"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.14285714285714285
+    },
+    {
+      "issue": 919,
+      "as_of": "2018-01-26T10:27:14Z",
+      "snapshot_ref": "1e0e9b6210dd33010679ccff5362a791a5f7242a",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/core.py:click.core.BaseCommand.main",
+        "pallets/click:click/core.py:click.core.Command.__init__",
+        "pallets/click:click/core.py:click.core.Context.__init__",
+        "pallets/click:click/core.py:click.core.Context.exit",
+        "pallets/click:click/core.py:click.core.MultiCommand.resolve_command",
+        "pallets/click:click/core.py:click.core.Parameter.full_process_value",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator.new_func",
+        "pallets/click:click/exceptions.py:click.exceptions.Exit.__init__",
+        "pallets/click:click/testing.py:click.testing.Result.__init__"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.14285714285714285
+    },
+    {
+      "issue": 925,
+      "as_of": "2018-02-06T00:23:27Z",
+      "snapshot_ref": "c7ef4bab075479830a349f9ee2020b7a953c27ff",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_option"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/core.py:click.core.BaseCommand.main",
+        "pallets/click:click/core.py:click.core.Command.__init__",
+        "pallets/click:click/core.py:click.core.Context.__init__",
+        "pallets/click:click/core.py:click.core.Context.exit",
+        "pallets/click:click/core.py:click.core.MultiCommand.resolve_command",
+        "pallets/click:click/core.py:click.core.Parameter.full_process_value",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator.new_func",
+        "pallets/click:click/exceptions.py:click.exceptions.Exit.__init__",
+        "pallets/click:click/testing.py:click.testing.Result.__init__"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 0.5,
+      "recall5": 0.07142857142857142
+    },
+    {
+      "issue": 925,
+      "as_of": "2018-02-06T00:23:27Z",
+      "snapshot_ref": "c7ef4bab075479830a349f9ee2020b7a953c27ff",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/core.py:click.core.BaseCommand.main",
+        "pallets/click:click/core.py:click.core.Command.__init__",
+        "pallets/click:click/core.py:click.core.Context.__init__",
+        "pallets/click:click/core.py:click.core.Context.exit",
+        "pallets/click:click/core.py:click.core.MultiCommand.resolve_command",
+        "pallets/click:click/core.py:click.core.Parameter.full_process_value",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator.new_func",
+        "pallets/click:click/exceptions.py:click.exceptions.Exit.__init__",
+        "pallets/click:click/testing.py:click.testing.Result.__init__"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.14285714285714285
+    },
+    {
+      "issue": 925,
+      "as_of": "2018-02-06T00:23:27Z",
+      "snapshot_ref": "c7ef4bab075479830a349f9ee2020b7a953c27ff",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/core.py:click.core.BaseCommand.main",
+        "pallets/click:click/core.py:click.core.Command.__init__",
+        "pallets/click:click/core.py:click.core.Context.__init__",
+        "pallets/click:click/core.py:click.core.Context.exit",
+        "pallets/click:click/core.py:click.core.MultiCommand.resolve_command",
+        "pallets/click:click/core.py:click.core.Parameter.full_process_value",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator",
+        "pallets/click:click/decorators.py:click.decorators.make_pass_decorator.decorator.new_func",
+        "pallets/click:click/exceptions.py:click.exceptions.Exit.__init__",
+        "pallets/click:click/testing.py:click.testing.Result.__init__"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.14285714285714285
+    },
+    {
+      "issue": 1047,
+      "as_of": "2018-06-18T00:28:36Z",
+      "snapshot_ref": "cd90e833779f2d566734cd8191f84ae45157b525",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.do_complete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 1.0,
+      "mrr": 0.25,
+      "recall5": 1.0
+    },
+    {
+      "issue": 1047,
+      "as_of": "2018-06-18T00:28:36Z",
+      "snapshot_ref": "cd90e833779f2d566734cd8191f84ae45157b525",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 1.0
+    },
+    {
+      "issue": 1047,
+      "as_of": "2018-06-18T00:28:36Z",
+      "snapshot_ref": "cd90e833779f2d566734cd8191f84ae45157b525",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 1.0
+    },
+    {
+      "issue": 1058,
+      "as_of": "2018-07-02T16:19:34Z",
+      "snapshot_ref": "8c5a89c7bb422b4cf04abc3f4fe678ce2e59dd78",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_option"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_visible_commands_starting_with"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.75
+    },
+    {
+      "issue": 1058,
+      "as_of": "2018-07-02T16:19:34Z",
+      "snapshot_ref": "8c5a89c7bb422b4cf04abc3f4fe678ce2e59dd78",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_visible_commands_starting_with"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.75
+    },
+    {
+      "issue": 1058,
+      "as_of": "2018-07-02T16:19:34Z",
+      "snapshot_ref": "8c5a89c7bb422b4cf04abc3f4fe678ce2e59dd78",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "actual": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_visible_commands_starting_with"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 1.0,
+      "top3": 1.0,
+      "top5": 1.0,
+      "mrr": 1.0,
+      "recall5": 0.75
+    },
+    {
+      "issue": 1065,
+      "as_of": "2018-07-10T14:50:00Z",
+      "snapshot_ref": "b61ec644fad6ed03b3e73f77c7c1242ebf0a3933",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/_compat.py:click._compat.open_stream",
+        "pallets/click:click/core.py:click.core.Argument.make_metavar"
+      ],
+      "actual": [
+        "pallets/click:click/_winconsole.py:click._winconsole._get_windows_console_stream",
+        "pallets/click:click/_winconsole.py:click._winconsole._is_console"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 1065,
+      "as_of": "2018-07-10T14:50:00Z",
+      "snapshot_ref": "b61ec644fad6ed03b3e73f77c7c1242ebf0a3933",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/_compat.py:click._compat.open_stream",
+        "pallets/click:click/core.py:click.core.Argument.make_metavar"
+      ],
+      "actual": [
+        "pallets/click:click/_winconsole.py:click._winconsole._get_windows_console_stream",
+        "pallets/click:click/_winconsole.py:click._winconsole._is_console"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 1065,
+      "as_of": "2018-07-10T14:50:00Z",
+      "snapshot_ref": "b61ec644fad6ed03b3e73f77c7c1242ebf0a3933",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/_compat.py:click._compat.open_stream",
+        "pallets/click:click/core.py:click.core.Argument.make_metavar",
+        "pallets/click:click/_compat.py:click._compat.get_binary_stdin",
+        "pallets/click:click/_compat.py:click._compat.get_binary_stdout",
+        "pallets/click:click/_compat.py:click._compat.get_text_stdin"
+      ],
+      "actual": [
+        "pallets/click:click/_winconsole.py:click._winconsole._get_windows_console_stream",
+        "pallets/click:click/_winconsole.py:click._winconsole._is_console"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 1075,
+      "as_of": "2018-07-24T10:00:12Z",
+      "snapshot_ref": "03e0133a39606dd6b5c1065d5bb23c84c25c4fbb",
+      "approach": "keyword",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_argument",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.is_incomplete_option"
+      ],
+      "actual": [
+        "pallets/click:click/formatting.py:click.formatting.HelpFormatter.write_dl"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 1075,
+      "as_of": "2018-07-24T10:00:12Z",
+      "snapshot_ref": "03e0133a39606dd6b5c1065d5bb23c84c25c4fbb",
+      "approach": "vector",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete"
+      ],
+      "actual": [
+        "pallets/click:click/formatting.py:click.formatting.HelpFormatter.write_dl"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    },
+    {
+      "issue": 1075,
+      "as_of": "2018-07-24T10:00:12Z",
+      "snapshot_ref": "03e0133a39606dd6b5c1065d5bb23c84c25c4fbb",
+      "approach": "whygraph",
+      "predictions": [
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_choices",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.add_subcommand_completions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.bashcomplete",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.get_user_autocompletions",
+        "pallets/click:click/_bashcomplete.py:click._bashcomplete.resolve_ctx"
+      ],
+      "actual": [
+        "pallets/click:click/formatting.py:click.formatting.HelpFormatter.write_dl"
+      ],
+      "eligible_historical_issues": 8,
+      "top1": 0.0,
+      "top3": 0.0,
+      "top5": 0.0,
+      "mrr": 0.0,
+      "recall5": 0.0
+    }
+  ]
+}

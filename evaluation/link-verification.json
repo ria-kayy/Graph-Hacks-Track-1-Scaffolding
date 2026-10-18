@@ -1,0 +1,62 @@
+[
+  {
+    "issue": 211,
+    "pr": 212,
+    "commit": "8aebc8b4164823b9c42db1701b5cd3453b3f530c",
+    "symbol": "click.termui.prompt",
+    "sources": [
+      "https://github.com/pallets/click/issues/211",
+      "https://github.com/pallets/click/pull/212",
+      "https://github.com/pallets/click/commit/8aebc8b4164823b9c42db1701b5cd3453b3f530c"
+    ],
+    "diff": "diff --git a/click/termui.py b/click/termui.py\nindex 9af224f..52043ef 100644\n--- a/click/termui.py\n+++ b/click/termui.py\n@@ -36 +36,2 @@ def prompt(text, default=None, hide_input=False,\n-           value_proc=None, prompt_suffix=': ', show_default=True):\n+           value_proc=None, prompt_suffix=': ',\n+           show_default=True, err=False):\n@@ -54,0 +56,2 @@ def prompt(text, default=None, hide_input=False,\n+    :param err: if set to true the file defaults to ``stderr`` instead of\n+                ``stdout``, the same as with echo.\n@@ -63 +66 @@ def prompt(text, default=None, hide_input=False,\n-            echo(text, nl=False)\n+            echo(text, nl=False, err=err)\n@@ -86 +89 @@ def prompt(text, default=None, hide_input=False,\n-            echo('Error: %s' % e.message)\n+            echo('Error: %s' % e.message, err=err)\n@@ -96 +99 @@ def prompt(text, default=None, hide_input=False,\n-        echo('Error: the two entered values do not match')\n+        echo('Error: the two entered values do not match', err=err)\n@@ -100 +103 @@ def confirm(text, default=False, abort=False, prompt_suffix=': ',\n-            show_default=True):\n+            show_default=True, err=False):\n@@ -111,0 +115,2 @@ def confirm(text, default=False, abort=False, prompt_suffix=': ',\n+    :param err: if set to true the file defaults to ``stderr`` instead of\n+                ``stdout``, the same as with echo.\n@@ -119 +124 @@ def confirm(text, default=False, abort=False, prompt_suffix=': ',\n-            echo(prompt, nl=False)\n+            echo(prompt, nl=False, err=err)\n@@ -130 +135 @@ def confirm(text, default=False, abort=False, prompt_suffix=': ',\n-            echo('Error: invalid input')\n+            echo('Error: invalid input', err=err)\n@@ -481 +486 @@ def getchar(echo=False):\n-def pause(info='Press any key to continue ...'):\n+def pause(info='Press any key to continue ...', err=False):\n@@ -495 +500 @@ def pause(info='Press any key to continue ...'):\n-            echo(info, nl=False)\n+            echo(info, nl=False, err=err)\n@@ -502 +507 @@ def pause(info='Press any key to continue ...'):\n-            echo()\n+            echo(err=err)\n"
+  },
+  {
+    "issue": 231,
+    "pr": 240,
+    "commit": "e2c3b9bc6122562c015bb98d3890a6d6512fba24",
+    "symbol": "click.formatting.wrap_text",
+    "sources": [
+      "https://github.com/pallets/click/issues/231",
+      "https://github.com/pallets/click/pull/240",
+      "https://github.com/pallets/click/commit/e2c3b9bc6122562c015bb98d3890a6d6512fba24"
+    ],
+    "diff": "diff --git a/click/formatting.py b/click/formatting.py\nindex e464d91..573f2d1 100644\n--- a/click/formatting.py\n+++ b/click/formatting.py\n@@ -48,0 +49,2 @@ def wrap_text(text, width=78, initial_indent='', subsequent_indent='',\n+    post_wrap_indent = subsequent_indent[:-1]\n+    subsequent_indent = subsequent_indent[-1:]\n@@ -50 +52 @@ def wrap_text(text, width=78, initial_indent='', subsequent_indent='',\n-                          subsequent_indent='',\n+                          subsequent_indent=subsequent_indent,\n@@ -53 +55 @@ def wrap_text(text, width=78, initial_indent='', subsequent_indent='',\n-        return add_subsequent_indent(wrapper.fill(text), subsequent_indent)\n+        return add_subsequent_indent(wrapper.fill(text), post_wrap_indent)\n@@ -85 +87 @@ def wrap_text(text, width=78, initial_indent='', subsequent_indent='',\n-                                                subsequent_indent))\n+                                                post_wrap_indent))\n@@ -88 +90 @@ def wrap_text(text, width=78, initial_indent='', subsequent_indent='',\n-                                                subsequent_indent))\n+                                                post_wrap_indent))\n"
+  },
+  {
+    "issue": 474,
+    "pr": 475,
+    "commit": "f41b71ccd7653b8378bf76f05e45f6b6e49d3ca3",
+    "symbol": "click.parser.OptionParser",
+    "sources": [
+      "https://github.com/pallets/click/issues/474",
+      "https://github.com/pallets/click/pull/475",
+      "https://github.com/pallets/click/commit/f41b71ccd7653b8378bf76f05e45f6b6e49d3ca3"
+    ],
+    "diff": "diff --git a/click/parser.py b/click/parser.py\nindex 9775c9f..4fe3d2f 100644\n--- a/click/parser.py\n+++ b/click/parser.py\n@@ -77,2 +77,2 @@ def _error_opt_args(nargs, opt):\n-        raise BadOptionUsage('%s option requires an argument' % opt)\n-    raise BadOptionUsage('%s option requires %d arguments' % (opt, nargs))\n+        raise BadOptionUsage(opt, '%s option requires an argument' % opt)\n+    raise BadOptionUsage(opt, '%s option requires %d arguments' % (opt, nargs))\n@@ -345 +345 @@ class OptionParser(object):\n-            raise BadOptionUsage('%s option does not take a value' % opt)\n+            raise BadOptionUsage(opt, '%s option does not take a value' % opt)\n"
+  },
+  {
+    "issue": 674,
+    "pr": 675,
+    "commit": "16f720d74eea3a811f73dc9cf6ef0a5a9294cac6",
+    "symbol": "click.core.Argument",
+    "sources": [
+      "https://github.com/pallets/click/issues/674",
+      "https://github.com/pallets/click/pull/675",
+      "https://github.com/pallets/click/commit/16f720d74eea3a811f73dc9cf6ef0a5a9294cac6"
+    ],
+    "diff": "diff --git a/click/core.py b/click/core.py\nindex 06ca15e..566c7a5 100644\n--- a/click/core.py\n+++ b/click/core.py\n@@ -1722 +1722,3 @@ class Argument(Parameter):\n-        var = self.name.upper()\n+        var = self.type.get_metavar(self)\n+        if not var:\n+            var = self.name.upper()\n"
+  },
+  {
+    "issue": 651,
+    "pr": 706,
+    "commit": "8780a763aab11f69258acccbcb9d0d97e92ebadb",
+    "symbol": "click._termui_impl.ProgressBar.next",
+    "sources": [
+      "https://github.com/pallets/click/issues/651",
+      "https://github.com/pallets/click/pull/706",
+      "https://github.com/pallets/click/commit/8780a763aab11f69258acccbcb9d0d97e92ebadb"
+    ],
+    "diff": "diff --git a/click/_termui_impl.py b/click/_termui_impl.py\nindex cebf3bb..daa50f4 100644\n--- a/click/_termui_impl.py\n+++ b/click/_termui_impl.py\n@@ -105 +105 @@ class ProgressBar(object):\n-        return self\n+        return self.generator()\n@@ -133 +133 @@ class ProgressBar(object):\n-            t = self.eta + 1\n+            t = int(self.eta)\n@@ -135 +135 @@ class ProgressBar(object):\n-            t /= 60\n+            t //= 60\n@@ -137 +137 @@ class ProgressBar(object):\n-            t /= 60\n+            t //= 60\n@@ -139 +139 @@ class ProgressBar(object):\n-            t /= 24\n+            t //= 24\n@@ -256 +256,9 @@ class ProgressBar(object):\n-    def next(self):\n+    def generator(self):\n+        \"\"\"\n+        Returns a generator which yields the items added to the bar during\n+        construction, and updates the progress bar *after* the yielded block\n+        returns.\n+        \"\"\"\n+        if not self.entered:\n+            raise RuntimeError('You need to use progress bars in a with block.')\n+\n@@ -258,5 +266,7 @@ class ProgressBar(object):\n-            return next(self.iter)\n-        try:\n-            rv = next(self.iter)\n-            self.current_item = rv\n-        except StopIteration:\n+            for rv in self.iter:\n+                yield rv\n+        else:\n+            for rv in self.iter:\n+                self.current_item = rv\n+                yield rv\n+                self.update(1)\n@@ -265,8 +274,0 @@ class ProgressBar(object):\n-            raise StopIteration()\n-        else:\n-            self.update(1)\n-            return rv\n-\n-    if not PY2:\n-        __next__ = next\n-        del next\n"
+  }
+]
